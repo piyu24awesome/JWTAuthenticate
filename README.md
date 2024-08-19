@@ -1,1 +1,91 @@
-"# JWTAuthenticate" 
+"# JWTAuthenticate"
+
+1. Features used to complete the assignment:
+   Spring Security
+   OAuth JWT
+   HttpOnly Cookie
+   AuthFilter
+   H2 Database
+   Login Logout: A mechanism to authenticate and de-authenticate users. RefreshToken Access Token: A technique to refresh the access token without requiring the user to re-authenticate.
+
+2. Project Dependency : web, lombock, validation, h2, jpa, oauth2, configuration-processor
+
+3. Database Setup : 3. `application.yml` file
+
+4. Run the project from com.assignment.userLogin.UserLoginApplication
+
+5. CURL used for APIS
+
+5.1. Sign Up
+
+Note:
+1. userName, userEmail, userPassword, userRole are mandatory fields
+2. userRole can be one of the following : ROLE_MANAGER, ROLE_ADMIN, ROLE_USER
+
+   curl --location 'http://localhost:8080/sign-up' \
+   --header 'Content-Type: application/json' \
+   --header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzY5NTAsImlhdCI6MTcyNDA4MDk1MCwic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.J3CGIn9S3j6SfX628BbFSXhzwztRyFyVBOymmxLHf0bYYdjaZ7SWWsGFky371WjNHAWFSZKrOkpFsJ1mLh78Hcq09BhVKNwsHe3Ms2v4zalf5pRi7GIIpbT28o169zeQ3BfxHAGSNQfRTLqxDRU1kZyfRB6N5vTdkN1TCH9t8bXYeYWOHUli74L5JAoxnt5sMlie_Kt8tOnCj5m-tM9esUFX28v4LrSl4RzbykYiK42aaOX0563_s_2ld566TLxhUMuqg_A3L-GW8eCescjbY61n7MW8XUL_u6I_Tf2N50L0vm7m6Xun2kjCZPtbC9HnpgyAueWJSRH6FZ1AqWusuw' \
+   --data-raw '{
+   "userName": "Manager",
+   "userEmail": "manager2@manager.com",
+   "userMobileNo": "8888888888",
+   "userPassword": "password",
+   "userRole": "ROLE_MANAGER"
+   }'
+
+
+5.2. Sign in :
+
+In  Auth Tab, select Basic Authentication and enter Username -> email Id and password to validate
+
+curl --location 'http://localhost:8080/sign-in' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic bWFuYWdlcjJAbWFuYWdlci5jb206cGFzc3dvcmQ=' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXIyQG1hbmFnZXIuY29tIiwiZXhwIjoxNzI1Mzc3MjY4LCJpYXQiOjE3MjQwODEyNjgsInNjb3BlIjoiUkVGUkVTSF9UT0tFTiJ9.hs1f9SJyXq6R90vKHruBTSXucanpK8jySWrT0NzGgMrwO7p8EmQNJ089l2EMHjwSPWXjkP73OftpfJtgyoqrj-KL6CZmUKhyCYhcf2szSh6AWCchN2CikoGPlL0SdOGLIqJXwLUBfkBXGVn8IISdLiWNgKVQuZQ1skfPXQavIFxzK8RF07SJGs2q3VujCeNWMgR4mn9QjrBRZF0q77_6GOBjY7-B5EopO_UI5jK0qAF7Ocsyg3qVPSJwr_00TDh9DEP3VfFfJxO8WkJWMrb4DLzj8puRDbBHzpEbgPEEF8BV4Y_oFodcuRUCPnZ0xFAtTWW7HxgGlDiJMncQuBkKnA' \
+--data '{}'
+
+
+
+5.3. Get Access based on the role of user.
+
+5.3.1 any User
+curl --location --request GET 'http://localhost:8080/api/welcome-message' \
+--header 'Content-Type: text/plain' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6InVzZXJAdXNlci5jb20iLCJleHAiOjE3MjQwNzg3ODMsImlhdCI6MTcyNDA3ODcyMywic2NvcGUiOiJSRUFEIn0.HDh4D9oSIzK4MAtNVsn3t8za4lZMLMRwcHoO0SHfXapBbimLDee4BqISuunvvS_aQdWyBmPCrNDirUOpz9RcXM1LRTE2euC26WR3dfAamXI60KbEp90qt0uXuCOEC35lCr7a4DL7oW_yFXeE-naGemynzo1jnKiJPVi4l1tmT66u06SpXx26gnQwP31BdaATMgdffvPS3hbyNqVDfoQV-v6EYrClhyDL5fY9tjy7xUjE6MfmQ5Plgj_G5V8cdw1J3R5c7ReUMhV-L54WQxbyzULxLRXON7KK55F1vkiKYIF-amw9Mh9kOj6kb8pG4T9o_HZrWlN23S4eMoHGSPxQqw' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzUxMTMsImlhdCI6MTcyNDA3OTExMywic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.DWDkUE4rsBRIjxkuQEvKpeffrXnFrWDxq3n5-3P-OhTHmIUcL4h6tIPsYl9h7pie2Cs992HevfGJzpn2dLCkipIy7MgXg1MSeYl1tVC0h92wVFWtUFwpZ7RdDNSOk4yH1qOH6t417mA1mipb_AVtFZN2AL0w43eNuO_E-2KuTuEuJ1s4Fq35T9gPDfY-pABI0O5ViCS_03sR4anvJC6mJpFjj9T_zKyGmFPg69xlmJCAuU2EIZQmlUGcGEwfXzeDqrhQMAxIwHfF8p6GzM8VHXS0bq6OBqCkpQ7eyeuwZfegqMxj3HxTcEYPF8n4FXTz_tH_2Ac_OysViFIeF1-CDw' \
+--data '{}'
+
+
+5.3.2 Manager
+
+curl --location --request GET 'http://localhost:8080/api/manager-message' \
+--header 'Content-Type: text/plain' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXIyQG1hbmFnZXIuY29tIiwiZXhwIjoxNzI0MDgxMzI4LCJpYXQiOjE3MjQwODEyNjgsInNjb3BlIjoiUkVBRCJ9.DqQjepT4Bv9Yq5NCf4dErfi5bMY-ccjXaNhjlEwzonoxZXU4f5BaXn7mJ-bYL-qPc48ZO31a6geXS58mEQCPibkPUEqDSbFJyRJBdh3t8XKhrFRNacMknZMNPbBUh6FpY4Yx5LT6NaXwjfZ8oWGR7DHhzqLWrs26vPKLYw9qBKp0rWHxARkRbqKWMBJ8iMv3777xBAEGfNjpyayc5hUaOSALWmHRDehLgfF5Ww2JXnwBL0ojvfQW_geFe6c_5rqpX-2MVhxTw7Nw0E8xi5jrnlDwJSsCPeulxYfbpHL8diFHaDJW7bvWl2aS-P-T0N9yhrkxRHgOEjZvnL3ksM7I8w' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXIyQG1hbmFnZXIuY29tIiwiZXhwIjoxNzI1Mzc3MjY4LCJpYXQiOjE3MjQwODEyNjgsInNjb3BlIjoiUkVGUkVTSF9UT0tFTiJ9.hs1f9SJyXq6R90vKHruBTSXucanpK8jySWrT0NzGgMrwO7p8EmQNJ089l2EMHjwSPWXjkP73OftpfJtgyoqrj-KL6CZmUKhyCYhcf2szSh6AWCchN2CikoGPlL0SdOGLIqJXwLUBfkBXGVn8IISdLiWNgKVQuZQ1skfPXQavIFxzK8RF07SJGs2q3VujCeNWMgR4mn9QjrBRZF0q77_6GOBjY7-B5EopO_UI5jK0qAF7Ocsyg3qVPSJwr_00TDh9DEP3VfFfJxO8WkJWMrb4DLzj8puRDbBHzpEbgPEEF8BV4Y_oFodcuRUCPnZ0xFAtTWW7HxgGlDiJMncQuBkKnA' \
+--data '{}'
+
+5.3.3 Admin
+
+curl --location 'http://localhost:8080/api/admin-message?message=adminLogin' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjQwNzc5NTMsImlhdCI6MTcyNDA3Nzg5Mywic2NvcGUiOiJSRUFEIn0.FB4VGkpYpWC2HkwaH8gWEBBxxWffvD_tvYBeHpfG4F5sYBFsblVlIfNMyfPSegjRs_zL8opgqouXi5MMdjWV8_HB7_vWnMkV1owKcmTBhrObzmOBbR7IDvumcaHUdFz1EanKLMDPvDYaK_rPdgq_tO3X_Ro5VxOrVmyIdluA0XQYHkDmLPmoqivXQdVewTbqm8QwizfPj6GpUvECAzI-WunN7NYBthXMB9hAohG8NjH-53y1WUXlbwcwdHAgoCfuZxKkX83A4Up0RvgTvNq9IC_8r7sR7Eau2YGxk1G1IcpMYIbS0fmJ61SBktgpmOrdbkfqfG6gDNn-Ne1VtE4mFA' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXIyQG1hbmFnZXIuY29tIiwiZXhwIjoxNzI1Mzc3MjY4LCJpYXQiOjE3MjQwODEyNjgsInNjb3BlIjoiUkVGUkVTSF9UT0tFTiJ9.hs1f9SJyXq6R90vKHruBTSXucanpK8jySWrT0NzGgMrwO7p8EmQNJ089l2EMHjwSPWXjkP73OftpfJtgyoqrj-KL6CZmUKhyCYhcf2szSh6AWCchN2CikoGPlL0SdOGLIqJXwLUBfkBXGVn8IISdLiWNgKVQuZQ1skfPXQavIFxzK8RF07SJGs2q3VujCeNWMgR4mn9QjrBRZF0q77_6GOBjY7-B5EopO_UI5jK0qAF7Ocsyg3qVPSJwr_00TDh9DEP3VfFfJxO8WkJWMrb4DLzj8puRDbBHzpEbgPEEF8BV4Y_oFodcuRUCPnZ0xFAtTWW7HxgGlDiJMncQuBkKnA' \
+--data '{}'
+
+
+5.4. Refresh token- when access token expires, generate a new access token from Refresh token
+   In existing code base, access token expires in 1 min and refresh token expires in 15 days
+
+curl --location 'http://localhost:8080/refresh-token' \
+--header 'Content-Type: text/plain' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzUxMTMsImlhdCI6MTcyNDA3OTExMywic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.DWDkUE4rsBRIjxkuQEvKpeffrXnFrWDxq3n5-3P-OhTHmIUcL4h6tIPsYl9h7pie2Cs992HevfGJzpn2dLCkipIy7MgXg1MSeYl1tVC0h92wVFWtUFwpZ7RdDNSOk4yH1qOH6t417mA1mipb_AVtFZN2AL0w43eNuO_E-2KuTuEuJ1s4Fq35T9gPDfY-pABI0O5ViCS_03sR4anvJC6mJpFjj9T_zKyGmFPg69xlmJCAuU2EIZQmlUGcGEwfXzeDqrhQMAxIwHfF8p6GzM8VHXS0bq6OBqCkpQ7eyeuwZfegqMxj3HxTcEYPF8n4FXTz_tH_2Ac_OysViFIeF1-CDw' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzUxMTMsImlhdCI6MTcyNDA3OTExMywic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.DWDkUE4rsBRIjxkuQEvKpeffrXnFrWDxq3n5-3P-OhTHmIUcL4h6tIPsYl9h7pie2Cs992HevfGJzpn2dLCkipIy7MgXg1MSeYl1tVC0h92wVFWtUFwpZ7RdDNSOk4yH1qOH6t417mA1mipb_AVtFZN2AL0w43eNuO_E-2KuTuEuJ1s4Fq35T9gPDfY-pABI0O5ViCS_03sR4anvJC6mJpFjj9T_zKyGmFPg69xlmJCAuU2EIZQmlUGcGEwfXzeDqrhQMAxIwHfF8p6GzM8VHXS0bq6OBqCkpQ7eyeuwZfegqMxj3HxTcEYPF8n4FXTz_tH_2Ac_OysViFIeF1-CDw' \
+--data '{}'
+
+5.5 Logout -revoke the token when user log out
+
+curl --location 'http://localhost:8080/logout' \
+--header 'Content-Type: text/plain' \
+--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzUxMTMsImlhdCI6MTcyNDA3OTExMywic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.DWDkUE4rsBRIjxkuQEvKpeffrXnFrWDxq3n5-3P-OhTHmIUcL4h6tIPsYl9h7pie2Cs992HevfGJzpn2dLCkipIy7MgXg1MSeYl1tVC0h92wVFWtUFwpZ7RdDNSOk4yH1qOH6t417mA1mipb_AVtFZN2AL0w43eNuO_E-2KuTuEuJ1s4Fq35T9gPDfY-pABI0O5ViCS_03sR4anvJC6mJpFjj9T_zKyGmFPg69xlmJCAuU2EIZQmlUGcGEwfXzeDqrhQMAxIwHfF8p6GzM8VHXS0bq6OBqCkpQ7eyeuwZfegqMxj3HxTcEYPF8n4FXTz_tH_2Ac_OysViFIeF1-CDw' \
+--header 'Cookie: refresh_token=eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJBUE9yZyIsInN1YiI6Im1hbmFnZXJAbWFuYWdlci5jb20iLCJleHAiOjE3MjUzNzUxMTMsImlhdCI6MTcyNDA3OTExMywic2NvcGUiOiJSRUZSRVNIX1RPS0VOIn0.DWDkUE4rsBRIjxkuQEvKpeffrXnFrWDxq3n5-3P-OhTHmIUcL4h6tIPsYl9h7pie2Cs992HevfGJzpn2dLCkipIy7MgXg1MSeYl1tVC0h92wVFWtUFwpZ7RdDNSOk4yH1qOH6t417mA1mipb_AVtFZN2AL0w43eNuO_E-2KuTuEuJ1s4Fq35T9gPDfY-pABI0O5ViCS_03sR4anvJC6mJpFjj9T_zKyGmFPg69xlmJCAuU2EIZQmlUGcGEwfXzeDqrhQMAxIwHfF8p6GzM8VHXS0bq6OBqCkpQ7eyeuwZfegqMxj3HxTcEYPF8n4FXTz_tH_2Ac_OysViFIeF1-CDw' \
+--data '{}'
